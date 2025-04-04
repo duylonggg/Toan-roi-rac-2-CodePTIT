@@ -1,0 +1,54 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define tests()     int test_cases; cin >> test_cases; while (test_cases--)
+#define fastio()    ios::sync_with_stdio(false); cin.tie(nullptr);
+#define endl        '\n'
+
+short n, matrixAdj[101][101], edges;
+
+void solve1() {
+    for (int u = 1; u <= n; ++u) {
+        int out_deg = 0, in_deg = 0;
+        for (int v = 1; v <= n; ++v) {
+            out_deg += matrixAdj[u][v];
+            in_deg  += matrixAdj[v][u]; 
+        }
+        cout << in_deg << ' ' << out_deg << endl;
+    }  
+}
+
+void solve2() {
+    cout << n << endl;
+
+    for (int u = 1; u <= n; ++u) {
+        int edges = 0;
+        for (int v = 1; v <= n; ++v)
+            edges += matrixAdj[u][v];
+
+        cout << edges << ' ';
+        for (int v = 1; v <= n; ++v)
+            matrixAdj[u][v] && (cout << v << ' ');
+
+        cout << endl;
+    }
+}
+
+int main() {
+    fastio();
+    freopen("DT.INP", "r", stdin);
+    freopen("DT.OUT", "w", stdout);
+
+    int t;
+    cin >> t;
+
+    cin >> n;
+    for (int u = 1; u <= n; ++u)
+        for (int v = 1; v <= n; ++v) {
+            cin >> matrixAdj[u][v];
+            edges += matrixAdj[u][v];
+        }
+
+    (t == 1 ? solve1 : solve2)();
+    return 0;
+}
