@@ -5,17 +5,17 @@ using namespace std;
 #define fastio()    ios::sync_with_stdio(false); cin.tie(nullptr);
 #define endl        '\n'
 
-short n, matrixAdj[101][101], edges;
+short n, matrixAdj[101][101];
 
 void solve1() {
-    for (int u = 1; u <= n; ++u) {
-        int out_deg = 0, in_deg = 0;
-        for (int v = 1; v <= n; ++v) {
+    for (short u = 1; u <= n; ++u) {
+        short in_deg = 0, out_deg = 0;
+        for (short v = 1; v <= n; ++v) {
+            in_deg += matrixAdj[v][u];
             out_deg += matrixAdj[u][v];
-            in_deg  += matrixAdj[v][u]; 
         }
         cout << in_deg << ' ' << out_deg << endl;
-    }  
+    }
 }
 
 void solve2() {
@@ -47,16 +47,21 @@ int main() {
     freopen("DT.INP", "r", stdin);
     freopen("DT.OUT", "w", stdout);
 
-    int t;
+    short t;
     cin >> t;
 
     cin >> n;
-    for (int u = 1; u <= n; ++u)
-        for (int v = 1; v <= n; ++v) {
-            cin >> matrixAdj[u][v];
-            edges += matrixAdj[u][v];
+    for (short u = 1; u <= n; ++u) {
+        string str, ver;
+        getline(cin >> ws, str);
+        stringstream ss(str);
+        ss >> ver;
+        while (ss >> ver) {
+            short v = stoi(ver);
+            matrixAdj[u][v] = 1;
         }
-
+    }
+    
     (t == 1 ? solve1 : solve2)();
     return 0;
 }

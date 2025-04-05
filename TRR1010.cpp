@@ -30,8 +30,8 @@ void solve2() {
 
 int main() {
     fastio();
-    freopen("", "r", stdin);
-    freopen("", "w", stdout);
+    freopen("DT.INP", "r", stdin);
+    freopen("DT.OUT", "w", stdout);
 
     int t;
     cin >> t;
