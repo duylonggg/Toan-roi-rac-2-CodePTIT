@@ -5,7 +5,6 @@
 			"#include <bits/stdc++.h>",
 			"using namespace std;\n",
 
-			"#define tests()     int test_cases; cin >> test_cases; while (test_cases--)",
 			"#define fastio()    ios::sync_with_stdio(false); cin.tie(nullptr);",
 			"#define endl        '\\n'\n",
 
@@ -22,7 +21,7 @@
 			"\t// freopen(\"\", \"r\", stdin);",
 			"\t// freopen(\"\", \"w\", stdout);\n",
 
-			"\tint t;",
+			"\tshort t;",
 			"\tcin >> t;\n",
 
 			"\t(t == 1 ? solve1 : solve2)();",

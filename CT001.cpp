@@ -3,61 +3,98 @@ using namespace std;
 
 #define fastio() ios::sync_with_stdio(false); cin.tie(nullptr);
 
+vector<int> adj[101];
+
+void DFS(int u, int vis[]) {
+    vis[u] = true;
+
+    for (int v : adj[u])
+        if (!vis[v])
+            DFS(v, vis);
+}
+
 void solve1() {
-    int n, m;
+    int n, m, vis[101] = {};
     cin >> n >> m;
 
-    vector<int> degree(n + 1, 0);
     for (int i = 0; i < m; ++i) {
-        int x, y;
-        cin >> x >> y;
-        ++degree[x];
-        ++degree[y];
+        int u, v;
+        cin >> u >> v;
+
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
 
-    int oddDeg = count_if(degree.begin(), degree.end(), [](int d) { return d % 2; });
+    int checkEuler = 0, CC = 0;
+    for (int u = 1; u <= n; ++u) {
+        if (!vis[u]) {
+            ++CC;
+            DFS(u, vis);
+        }
+    }
 
-    cout << (oddDeg == 0 ? 1 : (oddDeg == 2 ? 2 : 0));
+    if (CC == 1) {
+        int odd = 0;
+        for (int u = 1; u <= n; ++u)
+            odd += (adj[u].size() % 2);
+
+        checkEuler = (odd ? 2 : 0);
+    }
+
+    cout << checkEuler << endl;
 }
 
 void solve2() {
-    int n, m, u;
-    cin >> n >> m >> u;
+    int n, m, s;
+    cin >> n >> m >> s;
 
-    vector<multiset<int>> graph(n + 1);
-    for (int i = 0; i < m; ++i) {
+    for (int i = 1; i <= m; ++i) {
         int x, y;
         cin >> x >> y;
-        graph[x].insert(y);
-        graph[y].insert(x);
+
+        adj[x].push_back(y);
+        adj[y].push_back(x);
     }
 
+    vector<int> ans;
+    vector<vector<bool>> vis(n + 1, vector<bool>(n + 1, false));
     stack<int> stk;
-    vector<int> circuit;
-    stk.push(u);
-    
-    while (!stk.empty()) {
-        int v = stk.top();
-        if (!graph[v].empty()) {
-            int next = *graph[v].begin();
-            graph[v].erase(graph[v].begin());
-            graph[next].erase(graph[next].find(v));
-            stk.push(next);
-        } else {
-            circuit.push_back(v);
+
+    stk.push(s);
+    while (m) {
+        int u = stk.top();
+        bool flag = false;
+
+        for (int v : adj[u]) {
+            if (!vis[u][v]) {
+                flag = true;
+                stk.push(v);
+
+                vis[u][v] = true;
+                vis[v][u] = true;
+
+                --m;
+                break;
+            }
+        }
+
+        if (!flag) {
+            ans.push_back(stk.top());
             stk.pop();
         }
     }
 
-    reverse(circuit.begin(), circuit.end());
-    for (int v : circuit) cout << v << ' ';
-    cout << endl;
+    while (!stk.empty()) {
+        ans.push_back(stk.top());
+        stk.pop();
+    }
+
+    reverse(ans.begin(), ans.end());
+    for (int& num : ans) cout << num << ' ';
 }
 
 int main() {
     fastio();
-    // freopen("CT.INP", "r", stdin);
-    // freopen("CT.OUT", "w", stdout);
     
     int t;
     cin >> t;

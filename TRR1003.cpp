@@ -19,10 +19,13 @@ inline void solve1() {
 inline void solve2() {
     vector<pair<int, int>> edges;
     
-    for (int i = 1; i <= n; ++i) 
-        for (int j = i; j <= n; ++j) 
-            if (matrixAdj[i][j]) 
+    for (int i = 1; i <= n; ++i) {
+        for (int j = i; j <= n; ++j) {  
+            if (matrixAdj[i][j]) {
                 edges.emplace_back(i, j);
+            }
+        }
+    }
 
     int m = edges.size();
     cout << n << ' ' << m << endl;
@@ -30,7 +33,7 @@ inline void solve2() {
     vector<vector<int>> incidenceMatrix(n + 1, vector<int>(m, 0));
     
     for (int k = 0; k < m; ++k) {
-        auto [u, v] = edges[k];
+        int u = edges[k].first, v = edges[k].second;
         incidenceMatrix[u][k] = 1;
         incidenceMatrix[v][k] = 1;
     }
@@ -45,8 +48,8 @@ inline void solve2() {
 
 int main() {
     fastio()
-    // freopen("DT.INP", "r", stdin);
-    // freopen("DT.OUT", "w", stdout);
+    freopen("DT.INP", "r", stdin);
+    freopen("DT.OUT", "w", stdout);
     
     short t;
     cin >> t;
