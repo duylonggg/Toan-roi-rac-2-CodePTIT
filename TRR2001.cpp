@@ -49,7 +49,6 @@ int main() {
     for (short u = 1; u <= n; ++u) {
         for (short v = 1; v <= n; ++v) {
             cin >> matrixAdj[u][v];
-
         }
     }
 
