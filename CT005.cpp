@@ -1,74 +1,63 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 
-#define fastio()    ios::sync_with_stdio(false); cin.tie(nullptr);
-#define endl        '\n'
+int n, m, u;
+vector<int> a[105];
+int visited[105];
+vector<int> path;
+vector<vector<int>> res;
 
-short n, m, s, countPath;
-set<short> adj[101];
-bitset<101> vis;
-short HC[101];
-
-inline void checkHamilton(short idx, short u) {
-    vis[u] = 1;
-    HC[idx] = u;
-
-    if (idx == n) {
-        if (adj[u].find(HC[1]) != adj[u].end())
-            ++countPath;
-        vis[u] = 0;
+void Try(int cur, int cnt) {
+    if (cnt == n) {
+        for (const int& v : a[cur]) {
+            if (v == u) {
+                path.emplace_back(u);
+                res.emplace_back(path);
+                path.pop_back();
+                break;
+            }
+        }
         return;
     }
 
-    for (short v : adj[u])
-        if (!vis[v])
-            checkHamilton(idx + 1, v);
-
-    vis[u] = 0;
-    return;
-}
-
-inline void Hamilton(short idx, short u) {
-    vis[u] = 1;
-    HC[idx] = u;
-
-    if (idx == n) {
-        if (adj[u].find(HC[1]) != adj[u].end()) {
-            for (short i = 1; i <= idx; ++i)
-                cout << HC[i] << ' ';
-            cout << HC[1] << endl;
-            vis[u] = 0;
-            return;
+    for (const int& v : a[cur]) {
+        if (!visited[v]) {
+            visited[v] = 1;
+            path.emplace_back(v);
+            Try(v, cnt + 1);
+            path.pop_back();
+            visited[v] = 0;
         }
     }
-
-    for (short v : adj[u])
-        if (!vis[v])
-            Hamilton(idx + 1, v);
-
-    vis[u] = 0;
-    return;
 }
 
-signed int main() {
-    fastio();
-    // freopen("CT.INP", "r", stdin);
-    // freopen("CT.OUT", "w", stdout);
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 
-    cin >> n >> m >> s;
-    while (m--) {
-        short u, v;
-        cin >> u >> v;
-        adj[u].insert(v);
+    //freopen("CT.INP", "r", stdin);
+	//freopen("CT.OUT", "w", stdout);
+
+    cin >> n >> m >> u;
+
+    for (int i = 0; i < m; ++i) {
+        int x, y;
+        cin >> x >> y;
+        a[x].emplace_back(y);
+        a[y].emplace_back(x);
     }
 
-    checkHamilton(1, s);
-    if (!countPath) {
-        cout << countPath;
-        return 0;
-    }
+    visited[u] = 1;
+    path.emplace_back(u);
+    Try(u, 1);
 
-    cout << countPath << endl;
-    Hamilton(1, s);
+    cout << res.size() << '\n';
+    for (const auto& cycle : res) {
+        for (int v : cycle)
+            cout << v << ' ';
+        cout << '\n';
+    }
     return 0;
 }
