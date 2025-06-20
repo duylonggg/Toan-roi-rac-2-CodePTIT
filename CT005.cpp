@@ -10,7 +10,7 @@ vector<vector<int>> res;
 
 void Try(int cur, int cnt) {
     if (cnt == n) {
-        for (const int& v : a[cur]) {
+        for (int& v : a[cur]) {
             if (v == u) {
                 path.emplace_back(u);
                 res.emplace_back(path);
@@ -21,7 +21,7 @@ void Try(int cur, int cnt) {
         return;
     }
 
-    for (const int& v : a[cur]) {
+    for (int& v : a[cur]) {
         if (!visited[v]) {
             visited[v] = 1;
             path.emplace_back(v);
