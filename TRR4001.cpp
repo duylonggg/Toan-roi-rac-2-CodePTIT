@@ -17,9 +17,7 @@ void input() {
             int x;
             cin >> x;
 
-            if (x == 1) {
-                adj[u].push_back(v);
-            }
+            if (x == 1) adj[u].push_back(v);
         }
     }
 }
