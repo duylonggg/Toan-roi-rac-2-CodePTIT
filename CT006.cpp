@@ -4,81 +4,66 @@ using namespace std;
 #define fastio() ios::sync_with_stdio(false); cin.tie(nullptr);
 #define endl '\n'
 
-const short INF = 10000;
-short n, s;
-short matrixAdj[101][101], hamilton[101];
-vector<short> bestPath;
-bool vis[101];
-int minW = INF;
-bool isHamilton = false;
+int n, s, minVal = INT_MAX;
+vector<array<int, 2>> adj[1005];
+bool hamilton = false;
+vector<int> path, bestPath;
+bitset<1005> vis;
 
-void checkHamilton(short idx, short u) {
-    vis[u] = true;
-    hamilton[idx] = u;
-
-    if (idx == n) {
-        if (matrixAdj[u][hamilton[1]]) 
-            isHamilton = true;
-        vis[u] = false; 
-        return;
-    }
-
-    for (short v = 1; v <= n; ++v) {
-        if (!vis[v] and matrixAdj[u][v]) {
-            checkHamilton(idx + 1, v);
-        }
-    }
-
-    vis[u] = false; 
-}
-
-void Hamilton(short idx, short u, int sumW) {
-    vis[u] = true;
-    hamilton[idx] = u;
-
-    if (idx == n) {
-        if (matrixAdj[u][hamilton[1]]) {
-            int totalWeight = sumW + matrixAdj[u][hamilton[1]];
-            if (minW > totalWeight) {
-                minW = totalWeight;
-                bestPath.assign(hamilton + 1, hamilton + n + 1); 
-                bestPath.push_back(hamilton[1]); 
+void Hamilton(int cnt, int cur, int minW) {
+    if (cnt == n) {
+        for (auto [v, w] : adj[cur]) {
+            if (v == s) {
+                if (minW + w < minVal) {
+                    minVal = minW + w;
+                    path.push_back(v);
+                    bestPath = path;
+                    path.pop_back();
+                    hamilton = true;
+                    break;
+                }
             }
         }
-        vis[u] = false; 
         return;
     }
 
-    for (short v = 1; v <= n; ++v) {
-        if (!vis[v] and matrixAdj[u][v]) {
-            Hamilton(idx + 1, v, sumW + matrixAdj[u][v]);
+    for (auto [v, w] : adj[cur]) {
+        if (!vis[v]) {
+            vis[v] = 1;
+            path.push_back(v);
+            Hamilton(cnt + 1, v, minW + w);
+            path.pop_back();
+            vis[v] = 0;
         }
     }
-
-    vis[u] = false; 
 }
 
 int main() {
     fastio();
 
     cin >> n >> s;
-    for (short u = 1; u <= n; ++u) {
-        for (short v = 1; v <= n; ++v) {
-            cin >> matrixAdj[u][v];
-            if (matrixAdj[u][v] == INF) matrixAdj[u][v] = 0;
+
+    for (int u = 1; u <= n; ++u) {
+        for (int v = 1; v <= n; ++v) {
+            int w;
+            cin >> w;
+
+            if (w > 0 and w <= 50) adj[u].push_back({v, w});
         }
     }
 
-    checkHamilton(1, s);
-    if (!isHamilton) {
-        cout << 0;
+    vis.reset();
+    vis[s] = 1;
+    path.push_back(s);
+    Hamilton(1, s, 0);
+
+    if (!hamilton) {
+        cout << 0 << endl;
         return 0;
     }
 
-    Hamilton(1, s, 0);
-    cout << minW << endl;
-    for (short node : bestPath) 
-        cout << node << " ";
-
+    cout << minVal << endl;
+    for (auto p : bestPath) cout << p << ' ';
+    cout << endl;
     return 0;
 }
